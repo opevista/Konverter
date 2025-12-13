@@ -1,0 +1,43 @@
+{
+  "name": "konverter-electron",
+  "version": "0.1.0",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "start:dev": "electron .",
+    "package": "electron-builder --mac"
+  },
+  "devDependencies": {
+    "electron": "^26.2.0",
+    "electron-builder": "^26.0.12"
+  },
+  "dependencies": {
+    "jimp": "^1.6.0"
+  },
+  "build": {
+    "appId": "com.yourcompany.konverter",
+    "productName": "Konverter",
+    "directories": {
+      "output": "../Package"
+    },
+    "files": [
+      "**/*",
+      "!**/.venv/*"
+    ],
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "icon": "icon.png",
+      "extendInfo": "extend-info.plist"
+    },
+    "extraFiles": [
+      {
+        "from": "bin/ffmpeg",
+        "to": "Resources/bin/ffmpeg",
+        "filter": ["**/*"]
+      }
+    ]
+  }
+}
