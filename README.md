@@ -1,52 +1,57 @@
 # Konverter
 
-Konverter is an Electron-based desktop application designed for media file conversion.
+Konverter は、メディアファイルの変換を目的とした Electron ベースのデスクトップアプリケーションです。
 
-## Features
+## 特長
 
--   Convert various media file formats.
--   User-friendly interface.
+* さまざまなメディアファイル形式の変換に対応しています。
+* 直感的で使いやすいユーザーインターフェースを備えています。
 
-## Installation
+## インストール
 
-To install Konverter, download the latest `.dmg` (for macOS) or `.zip` (for macOS) release from the [releases page](https://github.com/opevista/Konverter/releases).
+Konverter をインストールするには、[リリースページ](https://github.com/opevista/Konverter/releases) から最新の `.dmg`（macOS 用）または `.zip`（macOS 用）をダウンロードしてください。
 
-## Building from Source
+## ソースからのビルド
 
-To build Konverter from source, follow these steps:
+ソースコードから Konverter をビルドする手順は以下のとおりです。
 
-1.  **Clone the repository:**
-    ```bash
-    git clone https://github.com/opevista/Konverter.git
-    cd Konverter
-    ```
+1. **リポジトリをクローンする**
 
-2.  **Navigate to the electron directory:**
-    ```bash
-    cd electron
-    ```
+   ```bash
+   git clone https://github.com/opevista/Konverter.git
+   cd Konverter
+   ```
 
-3.  **Install dependencies:**
-    ```bash
-    npm install
-    ```
+2. **electron ディレクトリへ移動する**
 
-4.  **Package the application:**
-    ```bash
-    npm run package
-    ```
-    This will generate the `.dmg` and `.zip` files in the `Package` directory.
+   ```bash
+   cd electron
+   ```
 
-## Recommended Application for Media Files (macOS)
+3. **依存関係をインストールする**
 
-Konverter is configured to appear as an "Alternate" recommended application for various media file types on macOS. This means you can right-click on a media file, select "Open With," and find Konverter in the list.
+   ```bash
+   npm install
+   ```
 
-The `Info.plist` modification for this is automatically applied during the `npm run package` process via a `postpackage` script in `electron/package.json`.
+4. **アプリケーションをパッケージ化する**
 
-## Contributing
+   ```bash
+   npm run package
+   ```
 
-Contributions are welcome! Please open an issue or submit a pull request.
+   これにより、`Package` ディレクトリ内に `.dmg` および `.zip` ファイルが生成されます。
 
-## License
+## メディアファイルの推奨アプリケーション設定（macOS）
 
-This project is licensed under the MIT License.
+Konverter は macOS において、各種メディアファイルの「別の推奨アプリケーション」として表示されるよう設定されています。これにより、メディアファイルを右クリックし、「このアプリケーションで開く」から Konverter を選択できます。
+
+この設定に必要な `Info.plist` の変更は、`electron/package.json` に定義された `postpackage` スクリプトによって、`npm run package` 実行時に自動的に適用されます。
+
+## コントリビューション
+
+コントリビューションは歓迎しています。Issue の作成、またはプルリクエストの送信をご検討ください。
+
+## ライセンス
+
+本プロジェクトは MIT ライセンスのもとで公開されています。
