@@ -1,0 +1,26 @@
+# Ignore build artifacts and temporary files
+build/
+Package/
+archive/
+.venv/
+node_modules/
+
+# Ignore OS-specific files
+.DS_Store
+
+# Ignore specific files that are not part of the Electron source
+README-electron.md
+# These files were part of the previous Python backend
+Konverter.spec
+build_pyinstaller.sh
+main.py
+requirements.txt
+setup.py
+
+# Ignore electron-specific build artifacts
+electron/node_modules/
+electron/build/
+electron/.venv/
+electron/backend_dist/
+electron/bin/ffmpeg
+electron/konverter-backend.spec

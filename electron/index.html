@@ -1,0 +1,298 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Konverter created by @nisesimadao</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+</head>
+<body>
+  <main class="container">
+    <div id="header">
+      <h1 class="gradient-text">Konverter</h1>
+      <p style="color:var(--muted)">ファイルを選択して変換します</p>
+    </div>
+
+    <div id="main">
+      <div id="controls">
+        <input id="file" type="file">
+        <span id="fileLabel" class="hidden"></span>
+        <select id="ext" aria-label="Target format">
+          <optgroup label="Images">
+            <option value=".png">.png</option>
+            <option value=".jpg">.jpg</option>
+            <option value=".jpeg">.jpeg</option>
+            <option value=".webp">.webp</option>
+            <option value=".tiff">.tiff</option>
+            <option value=".tif">.tif</option>
+            <option value=".bmp">.bmp</option>
+            <option value=".gif">.gif</option>
+            <option value=".heic">.heic</option>
+            <option value=".heif">.heif</option>
+            <option value=".avif">.avif</option>
+          </optgroup>
+          <optgroup label="Video">
+            <option value=".mp4">.mp4</option>
+            <option value=".mov">.mov</option>
+            <option value=".mkv">.mkv</option>
+            <option value=".avi">.avi</option>
+          </optgroup>
+          <optgroup label="Audio">
+            <option value=".mp3">.mp3</option>
+            <option value=".wav">.wav</option>
+            <option value=".ogg">.ogg</option>
+            <option value=".flac">.flac</option>
+            <option value=".m4a">.m4a</option>
+          </optgroup>
+        </select>
+        <button id="send">変換</button>
+        <div id="out" class="log">ログがここに表示されます</div>
+      </div>
+    </div>
+  </main>
+
+  <style>
+    /* Custom styles after Pico.css */
+    :root {
+      --fg-rgb: 17, 17, 17; /* Default for light mode */
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --fg-rgb: 230, 230, 230; /* Default for dark mode */
+      }
+    }
+    html,body { height:100%; margin:0; } /* Pico handles font-family, color, background */
+    
+    /* Apply box-shadow to elements Pico already styles */
+    input, select, button { box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    button { color:#fff; } /* Ensure button text is white */
+
+    .log { 
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, 'Roboto Mono', monospace; 
+      background: var(--pico-muted-border-color); /* Use Pico's muted color */
+      color: var(--pico-form-element-color); /* Use Pico's text color */
+      padding: var(--pico-spacing); 
+      border-radius: var(--pico-border-radius); 
+      /* min-width:200px;  Removed for flexbox sizing */
+      max-width:420px; 
+      white-space:nowrap; 
+      overflow:hidden; 
+      text-overflow:ellipsis; 
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05); 
+      cursor: pointer;
+      margin-top: var(--pico-spacing); /* Add some margin from controls */
+    }
+    .log.success { background: hsla(var(--pico-success-h), var(--pico-success-s), var(--pico-success-l), 0.1); color: var(--pico-success); }
+    .log.error { background: hsla(var(--pico-error-h), var(--pico-error-s), var(--pico-error-l), 0.1); color: var(--pico-error); }
+    .log.expanded { max-width: none; white-space: normal; overflow: visible; text-overflow: clip; }
+    
+    .hidden { display:none !important }
+    .gradient-text {
+      background: linear-gradient(to bottom, var(--pico-form-element-color), rgba(var(--fg-rgb), 0.75));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-fill-color: transparent;
+    }
+    
+    /* Adjustments for dark mode shadows */
+    @media (prefers-color-scheme: dark) {
+      input, select, button, .log { box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+    }
+    
+    /* Pico overrides and minimal mode adjustments */
+    .minimal-mode body {
+      margin: 0;
+    }
+    .minimal-mode #controls {
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: center;
+      gap: 2px; /* Even smaller gap */
+    }
+    .minimal-mode #controls input,
+    .minimal-mode #controls select,
+    .minimal-mode #controls button {
+      font-size: 0.8em; /* Smaller font size for controls */
+      padding: 3px 5px !important; /* Force smaller padding */
+    }
+    .minimal-mode #fileLabel {
+      /* flex-grow: 1; Removed to prevent it from taking up extra space */
+      min-width: 50px; /* Ensure a small minimum width */
+      font-size: 1em; /* Keep font size relative to parent */
+      text-align: left; /* Default alignment */
+      padding-right: 0; /* No padding */
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .minimal-mode #ext, .minimal-mode #send {
+      flex-shrink: 0; /* Prevent select and button from shrinking */
+      max-width: 70px; /* Explicit max-width */
+      text-align: center; /* Center text */
+    }
+    .minimal-mode #out {
+      flex-grow: 0; /* Don't grow beyond content */
+      flex-shrink: 1; /* Allow it to shrink */
+      min-width: 50px; /* Small minimum width */
+      max-width: 100px; /* Explicit max-width */
+      padding: 3px 5px; /* Smaller padding */
+      white-space: nowrap; /* Keep it on one line in minimal mode */
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+
+    /* Adjustments for the specific layout requested by the user */
+    #header h1 { margin-bottom: 0; }
+    #header p { margin-top: 0; }
+    /* #fileLabel {  Moved to .minimal-mode #fileLabel for clarity
+      font-size: 0.8em; 
+      color: var(--pico-muted-color); 
+      max-width: 180px; 
+      overflow: hidden; 
+      text-overflow: ellipsis; 
+      display:inline-block;
+      text-align: right; 
+      padding-right: var(--pico-spacing);
+    } */
+    /* Hide the default file input text when a file is selected */
+    input[type="file"]::file-selector-button { display: none; }
+    input[type="file"] { border-color: var(--pico-form-element-border-color); }
+
+  </style>
+
+  <script>
+    (function(){
+      const outEl = document.getElementById('out')
+      const params = new URLSearchParams(location.search)
+      let opened = params.get('opened') === '1'
+      let openedPath = params.get('path') || ''
+      
+      // Event listener for log expansion
+      outEl.addEventListener('click', () => {
+        outEl.classList.toggle('expanded');
+      });
+
+      // Helper function to update log display
+      function showLogSuccess(text){ outEl.className = 'log success'; outEl.textContent = text; }
+      function showLogError(text){ outEl.className = 'log error'; outEl.textContent = text; }
+      function showLogInfo(text){ outEl.className = 'log'; outEl.textContent = text; }
+
+      // Set minimal mode for Finder-opened files
+      // Helper function to update UI with file info
+      function loadFileToUI(fp) {
+        const fullFileName = fp.split('/').pop() || fp; 
+        const fileNameWithoutExt = fullFileName.split('.').slice(0, -1).join('.'); 
+        const originalExt = (fullFileName.indexOf('.') > -1) ? '.' + fullFileName.split('.').pop().toLowerCase() : ''; 
+
+        const label = document.getElementById('fileLabel');
+        label.textContent = fileNameWithoutExt; 
+        label.title = fp; 
+
+        const sel = document.getElementById('ext');
+        for (const o of sel.options) {
+            if (o.value === originalExt) {
+                sel.value = originalExt; 
+                break;
+            }
+        }
+      }
+
+      // Set minimal mode for Finder-opened files
+      function setMinimalMode() {
+        document.body.classList.add('minimal-mode');
+        document.getElementById('header').classList.add('hidden')
+        document.getElementById('file').classList.add('hidden')
+        document.getElementById('fileLabel').classList.remove('hidden')
+        document.getElementById('send').textContent = '変換'
+        document.body.style.margin = '6px'
+      }
+
+      // This function is called when a file is opened from Finder
+      function handleFileFromFinder(fp) {
+        opened = true;
+        openedPath = fp;
+        setMinimalMode(); // Set minimal mode UI
+        loadFileToUI(fp);   // Load file info into UI
+      }
+
+      // This function is called when a file is opened via drag-and-drop or manual selection
+      function handleFileFromNormalMode(fp) {
+        opened = false; // Ensure it's not in Finder mode
+        openedPath = fp; // Update path
+        // Don't call setMinimalMode()
+        loadFileToUI(fp); // Load file info into UI
+      }
+
+
+      // Refactored conditional logic for initial file loading
+      if (opened) { // If opened from Finder
+        try { handleFileFromFinder(decodeURIComponent(openedPath)); } catch (e) {}
+      } else { // Normal mode, enable drag-and-drop
+        document.body.addEventListener('dragover', (event) => {
+          event.preventDefault(); // Allow drop
+        });
+
+        document.body.addEventListener('drop', (event) => {
+          event.preventDefault();
+          const files = event.dataTransfer.files;
+          if (files.length > 0) {
+            const filePath = files[0].path;
+            if (filePath) {
+              handleFileFromNormalMode(filePath); // Use new function for normal mode D&D
+            }
+          }
+        });
+      }
+
+      // Listen for main process open-file message via contextBridge
+      if (window.konverter && window.konverter.onOpen) {
+        try {
+          window.konverter.onOpen((fp) => {
+            // This is for Finder opened files (re-opening app window)
+            handleFileFromFinder(fp);
+          })
+        } catch (e) {}
+      }
+
+      // Handle send button click
+      document.getElementById('send').addEventListener('click', async () => {
+        const ext = document.getElementById('ext').value
+        showLogInfo('変換中...')
+        try {
+          let inPath = null;
+          if (opened) {
+            inPath = decodeURIComponent(openedPath);
+          } else {
+            const f = document.getElementById('file').files[0]
+            if (!f) { 
+              showLogError('ファイルを選択してください'); 
+              return;
+            }
+            inPath = f.path; // In Electron, the File object has a 'path' property
+          }
+          
+          if (!inPath) {
+            showLogError('入力ファイルが見つかりません');
+            return;
+          }
+
+          const data = await window.konverter.convertFile(inPath, ext);
+
+          if (data && data.ok) {
+            showLogSuccess('完了: ' + data.out)
+            if (opened && window.konverter && window.konverter.quit) {
+              setTimeout(() => window.konverter.quit(), 800)
+            }
+          } else {
+            const msg = data && data.error ? data.error : '不明なエラー'
+            showLogError('失敗: ' + msg)
+          }
+        } catch (e) {
+          showLogError('エラー: ' + (e && e.message ? e.message : e))
+        }
+      })
+    })()
+  </script>
+</body>
+</html>
